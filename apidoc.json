@@ -1,0 +1,8 @@
+{
+    "name": "Telecom Resources Server",
+    "version": "1.0.0",
+    "description": "Pacific Telecom Venezuela",
+    "template": {
+        "forceLanguage": "en"
+    }
+}

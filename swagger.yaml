@@ -1,0 +1,1866 @@
+openapi: 3.0.0
+info:
+  title: Pacific Telecom
+  description: Apis para Pacific Telecom
+  version: 0.1
+servers:
+  # - url: http://localhost:3000
+  - url: http://138.197.105.129:3000
+    description: Pacific Telecom Resource Server
+
+# 1) Define the security scheme type (HTTP bearer)
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+# 2) Apply the security globally to all operations
+security:
+  - bearerAuth: []         # use the same name as above
+
+paths:
+
+############################################### [UBICACION] ######################################
+  /location/states:
+    get:
+      summary: Obtener los estados.
+      tags:
+        - Ubicacion
+      responses:
+        '200':
+          description: Estados
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+
+
+  /location/cities/{id}:
+    get:
+      summary: Obtener las ciudades por estado.
+      tags:
+        - Ubicacion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del estado
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  /location/municipalities/{id}:
+    get:
+      summary: Obtener los municipios por estado.
+      tags:
+        - Ubicacion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del estado
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  /location/parishes/{id}:
+    get:
+      summary: Obtener las parroquias por municipio.
+      tags:
+        - Ubicacion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del municipio.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+############################################### [USUARIOS] ######################################
+
+  /user/:
+    get: 
+      summary: Listar los usuarios
+      tags:
+        - Usuarios
+      responses: 
+        '200':
+          description: OK
+
+
+  
+  /user/{id}:
+    get:
+      summary: Obtener un usuario por id
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del usuario
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+          
+    /user/{id}:
+    patch:
+      summary: Actualizar un usuario por id
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del usuario.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  required: true
+                  type: string
+                lastname:
+                  required: true
+                  type: string
+                address: 
+                  required: true
+                  type: integer
+                address_alt:
+                  required: false
+                  type: string
+                phone:
+                  required: true
+                  type: string
+                email:
+                  required: true
+                  type: string
+                dni:
+                  required: true
+                  type: string
+                plan_id:
+                  required: true
+                  type: string
+                urbanism_id:
+                  required: true
+                  type: integer
+                type:
+                  required: true
+                  type: 'NATURAL , JURIDICA'
+                img:
+                  required: true
+                  type: string
+                  format: binary
+      responses: 
+        '200':
+          description: OK
+
+
+      /user/{id}:
+    delete:
+      summary: Eliminar un usuario por id
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del usuario.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      
+      responses: 
+        '200':
+          description: OK
+
+
+  /user/register:
+    post: 
+      summary: Registro de usuario
+      tags:
+        - Usuarios
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  required: true
+                  type: string
+                lastname:
+                  required: true
+                  type: string
+                address: 
+                  required: true
+                  type: integer
+                address_alt:
+                  required: false
+                  type: string
+                phone:
+                  required: true
+                  type: string
+                email:
+                  required: true
+                  type: string
+                # password:
+                #   required: true
+                #   type: string
+                dni:
+                  required: true
+                  type: string
+                plan_id:
+                  required: true
+                  type: string
+                urbanism_id:
+                  required: true
+                  type: integer
+                type:
+                  required: true
+                  type: 'NATURAL , JURIDICA'
+                img:
+                  required: true
+                  type: string
+                  format: binary
+      responses: 
+        '201':
+          description: OK
+
+
+  /user/admin_password_change/{id}:
+    patch: 
+      summary: Actualizar contrasena de usuario por usuario administrador
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del usuario
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"new_password": "test"}'
+      responses: 
+        '200':
+          description: OK
+
+  /user/client_password_change/{id}:
+     patch: 
+      summary: Actualizar contrasena de usuario por usuario cliente
+      tags:
+        - Usuarios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del usuario
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"new_password": "test2", "current_password":"test"}'
+      responses: 
+        '200':
+          description: OK
+  
+
+############################################### [AUTENTICACION] ######################################
+          
+  /auth/login:
+    post: 
+      summary: Login de usuario
+      tags:
+        - Autenticacion
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{ "email": "pacific-telecom@company.com", "password": "P@c1f1cT3l3c0m"  }'
+      responses: 
+        '200':
+          description: OK
+
+
+  /auth/logout:
+    post:
+      summary: Hacer logout automaticamente por el token guardado en localstorage
+      tags:
+        - Autenticacion     
+      responses: 
+        '200':
+          description: OK
+
+############################################### [PLANES] ######################################
+
+  /plans/:
+    get:
+      summary: Obtener todos los planes
+      tags:
+        - Planes
+      responses: 
+        '200':
+          description: OK
+
+
+  /plans/{id}:
+    get:
+      summary: Obtener un plan por id
+      tags:
+        - Planes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del plan
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+    /plans/{id}:
+    delete:
+      summary: Borra un plan por id
+      tags:
+        - Planes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del plan
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+      /plans/{id}:
+    patch: 
+      summary: Actualizar un plan por id
+      tags:
+        - Planes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del plan
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"name": "Conexion fibra optica","description": "Conexion de alta rapidez","monthly_price": 100000000,"long_term_price":10000000, "long_term_type":1,"service_id": 1,"weight": 1,"mbps_up":1, "mpbs_down": 3, "reuse_factor":5, "max_limit_up":2,"limit_at_up":2,"max_limit_down":2, "limit_at_down":2, "burst_limit_upload":2, "burst_limit_download":2, "burst_threshold_upload":2, "burst_threshold_download":2,"burst_time":2, "priority":2, "parent":1, "max_device_public_internet":2, "max_limit_value":2,"bw_required":2}'
+      responses: 
+        '200':
+          description: OK
+
+  /plans/register:
+    post: 
+      summary: Registrar plan
+      tags:
+        - Planes
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"name": "Conexion fibra optica","description": "Conexion de alta rapidez","monthly_price": 100000000,"long_term_price": 10000000, "long_term_type": 1,"service_id": 1,"mbps_up": 1,"mpbs_down": 1,"max_limit_parent_up": 1,"max_limit_parent_down": 1,"reuse_factor": 1,"max_limit_up": 1,"limit_at_up": 1,"max_limit_down": 1, "limit_at_down": 1,"burst_limit_upload": 1,"burst_limit_download": 1,"burst_threshold_upload": 1,"burst_threshold_download": 1,"burst_time": 1,"burst": false,"burst_x100": 1,"priority": 1,"parent": "DOWNLOAD","max_device_public_internet": 1,"max_limit_value": 1,"bw_required": 1,"weight": 1,"bucket": false,"active_service_quantity": 1}'
+      responses: 
+        '201':
+          description: OK
+
+############################################### [URBANISMOS] ######################################
+          
+  /urbanism/:
+    get:
+      summary: Obtener todos los urbanismos
+      tags:
+        - Urbanismos
+      responses: 
+        '200':
+          description: OK
+
+  /urbanism/{id}:
+    get:
+      summary: Obtener un urbanismo por id
+      tags:
+         - Urbanismos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del urbanismo
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  
+    /urbanism/{id}:
+    patch: 
+      summary: Actualizar urbanismo
+      tags:
+        - Urbanismos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del urbanismo
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"parish_id": 1,"city_id":1 ,"name": "test","households_qty": 23123, "latitude":"asdasdad", "longitude": "sadasd"}'
+      responses: 
+        '200':
+          description: OK
+
+      /urbanism/{id}:
+    delete:
+      summary: Borra un urbanismo por id
+      tags:
+        - Urbanismos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del urbanismo
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  /urbanism/register:
+    post: 
+      summary: Registrar urbanismo
+      tags:
+        - Urbanismos
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"parish_id": 1,"city_id":1 ,"name": "test","households_qty": 23123, "latitude":"asdasdad", "longitude": "sadasd"}'
+      responses: 
+        '201':
+          description: OK
+
+############################################### [REPORTE DE PAGOS] ######################################
+
+  # /payment_report/:
+  #   get:
+  #     summary: Obtener todos los reportes de pago
+  #     tags:
+  #       - Reporte de pagos
+  #     responses: 
+  #       '200':
+  #         description: OK
+
+  /payment_report/{id}:
+    get:
+      summary: Obtener un reporte de pago por id del usuario
+      tags:
+         - Reporte de pagos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del usuario
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  
+    /payment_report/{id}:
+    patch: 
+      summary: Actualizar reporte de pago
+      tags:
+        - Reporte de pagos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del reporte de pago
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+              example: '{"client_id": 3, plan_id: 1,"payment_amount":100 ,"payment_method_id": 1,"bank_id": 1, "reference_number":"test", "payment_date": "2021-01-27 02:41:00"}'
+      responses: 
+        '200':
+          description: OK
+
+      /payment_report/{id}:
+    delete:
+      summary: Borrar reporte de pago
+      tags:
+        - Reporte de pagos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del reporte de pago
+          schema:
+            type : integer
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  /payment_report/register:
+    post: 
+      summary: Registrar reporte de pago
+      tags:
+        - Reporte de pagos
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"client_id": 3, "plan_id": 1, "payment_amount":100 ,"payment_method_id": 1,"bank_id": 1, "reference_number":"test", "payment_date": "2021-01-27 02:41:00"}'
+      responses: 
+        '201':
+          description: OK
+  
+
+    ############################################### [BANCOS] ######################################
+
+  /banks/:
+    get:
+      summary: Obtener todos los bancos
+      tags:
+        - Bancos
+      responses: 
+        '200':
+          description: OK
+
+  /banks/{id}:
+    get:
+      summary: Obtener un banco por id
+      tags:
+         - Bancos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del banco
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+
+      /banks/{id}:
+    delete:
+        summary: Borrar banco
+        tags:
+        - Bancos
+        parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del banco
+          schema:
+            type : integer
+            minimum: 1
+        responses: 
+         '200':
+          description: OK
+
+
+        /banks/{id}:
+    patch: 
+      summary: Actualizar banco
+      tags:
+        - Bancos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del banco
+          schema:
+            type : integer
+            minimum: 1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  required: true
+                  type: string
+                country:
+                  required: true
+                  type: string
+                method: 
+                  required: true
+                  type: integer
+                account_number:
+                  required: true
+                  type: string
+                associated_phone:
+                  required: true
+                  type: string
+                account_type:
+                  required: true
+                  type: string
+                associated_email:
+                  required: true
+                  type: string
+                associated_rif:
+                  required: true
+                  type: string
+                pm_enable:
+                  required: true
+                  type: boolean
+                logo:
+                  required: true
+                  type: string
+                  format: binary
+      responses: 
+        '200':
+          description: OK
+
+    
+
+  /banks/method/{metodo}:
+     get: 
+      summary: Obtener banco por metodo
+      tags:
+        - Bancos
+      parameters:
+        - name: metodo
+          in: path
+          required: true
+          description: Metodo del banco
+          schema:
+            type : string
+            minimum: 1
+
+      responses: 
+        '200':
+          description: OK
+
+    
+  /banks/country/{pais}:
+     get: 
+      summary: Obtener banco por pais
+      tags:
+        - Bancos
+      parameters:
+        - name: pais
+          in: path
+          required: true
+          description: Pais del banco
+          schema:
+            type : string
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  
+  /banks/register:
+    post: 
+      summary: Registrar banco
+      tags:
+        - Bancos
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  required: true
+                  type: string
+                country:
+                  required: true
+                  type: string
+                method: 
+                  required: true
+                  type: integer
+                account_number:
+                  required: true
+                  type: string
+                associated_phone:
+                  required: true
+                  type: string
+                account_type:
+                  required: true
+                  type: string
+                associated_email:
+                  required: true
+                  type: string
+                associated_rif:
+                  required: true
+                  type: string
+                pm_enable:
+                  required: true
+                  type: boolean
+                logo:
+                  required: true
+                  type: string
+                  format: binary
+      responses: 
+        '201':
+          description: OK
+
+
+ ############################################### [ SERVICIOS ] ############################################
+
+ 
+  /services/:
+    get:
+      summary: Obtener todos los servicios
+      tags:
+        - Servicios
+      responses: 
+        '200':
+          description: OK
+
+
+  /services/{id}:
+    get:
+      summary: Obtener un servicio por id
+      tags:
+        - Servicios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del servicio
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+    /services/{id}:
+    delete:
+      summary: Borra un servicio por id
+      tags:
+        - Servicios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del servicio
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+      /services/{id}:
+    patch: 
+      summary: Actualizar un servicio por id
+      tags:
+        - Servicios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del servicio
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"name": "test"}'
+      responses: 
+        '200':
+          description: OK
+
+  /services/register:
+    post: 
+      summary: Registrar un servicio
+      tags:
+        - Servicios
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"name": "test"}'
+      responses: 
+        '201':
+          description: OK
+
+
+ ############################################### [ REPORTES DE FALLAS ] ############################################
+
+ 
+  /failure_reports/:
+    get:
+      summary: Obtener todos los reportes de falla
+      tags:
+        - Reportes de fallas
+      responses: 
+        '200':
+          description: OK
+
+
+  /failure_reports/{id}:
+    get:
+      summary: Obtener un reporte de falla por id
+      tags:
+        - Reportes de fallas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del reporte de falla
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+    /failure_reports/{id}:
+    delete:
+      summary: Borra un reporte de falla por id
+      tags:
+        - Reportes de fallas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del reporte de falla
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+      /failure_reports/{id}:
+    patch: 
+      summary: Actualizar un reporte de falla por id
+      tags:
+        - Reportes de fallas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del reporte de falla
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"subject": "test","description": "test","type":1,"service_id": 1,"client_id":2}'
+      responses: 
+        '200':
+          description: OK
+
+  /failure_reports/register:
+    post: 
+      summary: Registrar un Reportes de falla
+      tags:
+        - Reportes de fallas
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"subject": "test","description": "test","type":1,"service_id": 1,"client_id":2}'
+      responses: 
+        '201':
+          description: OK
+
+ ############################################### [ ASOCIAR PLANES A USUARIOS ] ############################################
+
+  /user_plan/:
+    post: 
+      summary: Registrar un plan a un cliente
+      tags:
+        - Asociar plan a cliente
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+            example: '{"plan_id": 1,"client_id":3,"status":1,"start_date":"2021-02-02 23:17:19"}'
+      responses: 
+        '200':
+          description: OK
+
+    /user_plan/{id}:
+      delete:
+        summary: Borra la asociacion de plan con usuario
+        tags:
+          - Asociar plan a cliente
+        parameters:
+          - name: id
+            in: path
+            required: true
+            description: id de la asociacion
+            schema:
+            type : integer
+            minimum: 1
+        responses: 
+        '200':
+          description: OK
+          
+ 
+ ############################################### [ MODULOS ] ######################################
+
+  /modules/:
+    get:
+      summary: Obtener todos los modulos
+      tags:
+        - Modulos
+      responses: 
+        '200':
+          description: OK
+
+  
+############################################### [PAQUETES DE INSTALACION] ######################################
+
+  /installation_packages/:
+    get: 
+      summary: Listar los paquetes de instalacion
+      tags:
+        - Paquetes de instalacion
+      responses: 
+        '200':
+          description: OK
+
+
+  
+  /installation_packages/{id}:
+    get:
+      summary: Obtener un paquetes de instalacion por id
+      tags:
+        - Paquetes de instalacion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del paquete de instalacion.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+          
+    /installation_packages/{id}:
+    patch:
+      summary: Actualizar un paquetes de instalacion por id
+      tags:
+        - Paquetes de instalacion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del paquete de instalacion.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  required: true
+                  type: string
+                description:
+                  required: true
+                  type: string
+                count_price: 
+                  required: true
+                  type: integer
+                finantial_price:
+                  required: false
+                  type: string
+                onu_img:
+                  required: true
+                  type: string
+                  format: binary
+      responses: 
+        '200':
+          description: OK
+
+
+      /installation_packages/{id}:
+    delete:
+      summary: Eliminar un paquetes de instalacion por id
+      tags:
+        - Paquetes de instalacion
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del paquete de instalacion.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      
+      responses: 
+        '200':
+          description: OK
+
+
+
+  /installation_packages/register:
+    post: 
+      summary: Registrar paquetes de instalacion 
+      tags:
+        - Paquetes de instalacion
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  required: true
+                  type: string
+                description:
+                  required: true
+                  type: string
+                count_price: 
+                  required: true
+                  type: integer
+                finantial_price:
+                  required: false
+                  type: string
+                onu_img:
+                  required: true
+                  type: string
+                  format: binary
+      responses: 
+        '201':
+          description: OK
+
+          
+ ############################################### [ CONFIGURACION DEL CORREO DEL SERVIDOR ] ############################################
+
+ 
+  /server_email_config/:
+    get:
+      summary: Obtener todos los reportes de falla
+      tags:
+        - Configuracion del correo del servidor
+      responses: 
+        '200':
+          description: OK
+
+
+  /server_email_config/{id}:
+    get:
+      summary: Obtener un reporte de falla por id
+      tags:
+        - Configuracion del correo del servidor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id de la configuracion del correo del servidor
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+      /server_email_config/{id}:
+    patch: 
+      summary: Actualizar un reporte de falla por id
+      tags:
+        - Configuracion del correo del servidor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id de la configuracion del correo del servidor
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                 uuid:
+                  required: true
+                  type: uuid
+                 url_server:
+                  required: true
+                  type: string
+                 port: 
+                  required: true
+                  type: integer
+                 status:
+                  required: false
+                  type: boolean
+            example: '{"uuid": "ec1a3c3a-7226-11eb-9439-0242ac130002","url_server": "test","port": 31231231,"status":false, "username":"test"}'
+      responses: 
+        '200':
+          description: OK
+
+  /server_email_config/register:
+    post: 
+      summary: Registrar un Reportes de falla
+      tags:
+        - Configuracion del correo del servidor
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                 uuid:
+                  required: true
+                  type: uuid
+                 url_server:
+                  required: true
+                  type: string
+                 port: 
+                  required: true
+                  type: integer
+                 status:
+                  required: false
+                  type: boolean
+            example: '{"uuid": "ec1a3c3a-7226-11eb-9439-0242ac130002","url_server": "test","port": 31231231,"status":false,  "username" : "test","password" :"test"}'
+      responses: 
+        '201':
+          description: OK
+
+          
+ ############################################### [ DATOS DE LA COMPANIA] ############################################
+
+ 
+  /company_data/:
+    get:
+      summary: Obtener todos los datos de la compañía
+      tags:
+        - Datos de la compañía
+      responses: 
+        '200':
+          description: OK
+
+
+  /company_data/{id}:
+    get:
+      summary: Obtener un dato de una compañía
+      tags:
+        - Datos de la compañía
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del dato de una compañía
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+      /company_data/{id}:
+    patch: 
+      summary: Actualizar un dato de la compañía
+      tags:
+        - Datos de la compañía
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del dato de una compañía
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                 url:
+                  required: true
+                  type: string
+                 name:
+                  required: true
+                  type: string
+                 dni:
+                  required: true
+                  type: string
+                 phone:
+                  required: true
+                  type: string
+                 alt_phone:
+                  required: true
+                  type: string
+                 sales_email:
+                  required: true
+                  type: string
+                 support_email:
+                  required: true
+                  type: string
+                 operations_email:
+                  required: true
+                  type: string
+                 logo:
+                  required: true
+                  type: string
+                  format: binary
+        
+      responses: 
+        '200':
+          description: OK
+
+  /company_data/register:
+    post: 
+      summary: Registrar un dato de la compañía
+      tags:
+        - Datos de la compañía
+      requestBody:   
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                 url:
+                  required: true
+                  type: string
+                 name:
+                  required: true
+                  type: string
+                 dni:
+                  required: true
+                  type: string
+                 phone:
+                  required: true
+                  type: string
+                 alt_phone:
+                  required: true
+                  type: string
+                 sales_email:
+                  required: true
+                  type: string
+                 support_email:
+                  required: true
+                  type: string
+                 operations_email:
+                  required: true
+                  type: string
+                 logo:
+                  required: true
+                  type: string
+                  format: binary
+        
+      responses: 
+        '201':
+          description: OK
+
+
+ ############################################### [ INTERNET SERVER CONFIG] ############################################
+
+ 
+
+  /internet_server_configuration/:
+    get:
+      summary: Obtener todas las configuraciones de servidor
+      tags:
+        - Configuracion de servidor
+      responses: 
+        '200':
+          description: OK
+
+  /internet_server_configuration/{id}:
+    get:
+      summary: Obtener una configuracion de servidor por id
+      tags:
+         - Configuracion de servidor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id de la configuracion del servidor
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  
+    /internet_server_configuration/{id}:
+    patch: 
+      summary: Actualizar urbanismo
+      tags:
+        - Configuracion de servidor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description:  id de la configuracion del servidor
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                 ip:
+                  required: true
+                  type: string
+                 username:
+                  required: true
+                  type: string
+                 password:
+                  required: true
+                  type: string
+                 port:
+                  required: true
+                  type: string
+                 token:
+                  required: true
+                  type: string
+                 url:
+                  required: true
+                  type: string
+            example: '{"ip": "test","username":"test" ,"password": "test","port": "test", "token":"test", "url": "test"}'
+      responses: 
+        '200':
+          description: OK
+
+      /internet_server_configuration/{id}:
+    delete:
+      summary: Borra un urbanismo por id
+      tags:
+        - Configuracion de servidor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description:  id de la configuracion del servidor
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  /internet_server_configuration/register:
+    post: 
+      summary: Registrar configuracion del servidor
+      tags:
+        - Configuracion de servidor
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                 ip:
+                  required: true
+                  type: string
+                 username:
+                  required: true
+                  type: string
+                 password:
+                  required: true
+                  type: string
+                 port:
+                  required: true
+                  type: string
+                 token:
+                  required: true
+                  type: string
+                 url:
+                  required: true
+                  type: string
+            example: '{"ip": "test","username":"test" ,"password": "test","port": "test", "token":"test", "url": "test"}'
+      responses: 
+        '201':
+          description: OK
+
+ ############################################### [EMAIL TEMPLATE] ############################################
+
+  /email_template/:
+    get:
+      summary: Obtener todos los templates
+      tags:
+        - Email Templates
+      responses: 
+        '200':
+          description: OK
+
+  /email_template/{id}:
+    get:
+      summary: Obtener un template
+      tags:
+         - Email Templates
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del template
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  
+    /email_template/{id}:
+    patch: 
+      summary: Actualizar template
+      tags:
+        - Email Templates
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description:  id del template
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                 name:
+                  required: true
+                  type: string
+                 text:
+                  required: true
+                  type: text
+                 password:
+                  required: true
+                  type: boolean
+            example: '{"name": "test","text":"test" ,"status": true}'
+      responses: 
+        '200':
+          description: OK
+
+      /email_template/{id}:
+    delete:
+      summary: Borra un template por id
+      tags:
+        - Email Templates
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description:  id de la configuracion del servidor
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  /email_template/register:
+    post: 
+      summary: Registrar configuracion del servidor
+      tags:
+        - Email Templates
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                 name:
+                  required: true
+                  type: string
+                 text:
+                  required: true
+                  type: text
+                 password:
+                  required: true
+                  type: boolean
+            example: '{"name": "test","text":"test" ,"status": true}'
+      responses: 
+        '201':
+          description: OK
+
+
+           ############################################### [CONFIGURACION DE INTERFAZ DE RED] ############################################
+
+  /network_interface/:
+    get:
+      summary: Obtener todas las interfaces de red
+      tags:
+        - Configuracion de interfaz de red
+      responses: 
+        '200':
+          description: OK
+
+  /network_interface/{id}:
+    get:
+      summary: Obtener una interfaces de red
+      tags:
+         - Configuracion de interfaz de red
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id de la interfaces de red
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  
+    /network_interface/{id}:
+    patch: 
+      summary: Actualizar la interfaz de red
+      tags:
+        - Configuracion de interfaz de red
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description:  id de la interfaz de red
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                 type:
+                  required: true
+                  type: enum ['COMPUESTA', 'FIJA']
+                 name:
+                  required: true
+                  type: string
+                 mbps_up:
+                  required: true
+                  type: integer
+                 mbps_down:
+                  required: true
+                  type: integer
+                 identifier:
+                  required: true
+                  type: string
+            example: '{"type": "COMPUESTA","name": "test","mbps_up": 100,"mbps_down": 100,"identifier": "asd2a2sdd"}'
+      responses: 
+        '200':
+          description: OK
+
+      /network_interface/{id}:
+    delete:
+      summary: Borra una interfaces de red por id
+      tags:
+        - Configuracion de interfaz de red
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description:  id de la interfaz de red
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+  /network_interface/register:
+    post: 
+      summary: Registrar interfaz de red
+      tags:
+        - Configuracion de interfaz de red
+      requestBody:   
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                 type:
+                  required: true
+                  type: enum ['COMPUESTA', 'FIJA']
+                 name:
+                  required: true
+                  type: string
+                 mbps_up:
+                  required: true
+                  type: integer
+                 mbps_down:
+                  required: true
+                  type: integer
+                 identifier:
+                  required: true
+                  type: string
+            example: '{"type": "COMPUESTA","name": "test","mbps_up": 100,"mbps_down": 100,"identifier": "asd2a2sdd"}'
+      responses: 
+        '201':
+          description: OK
+
+
+   ############################################### [CONFIGURACION DE EQUIPOS DE RED] ############################################
+
+
+          
+  /network_equipment/:
+    get: 
+      summary: Listar los equipos de red
+      tags:
+        - Equipos de red
+      responses: 
+        '200':
+          description: OK
+
+
+  
+  /network_equipment/{id}:
+    get:
+      summary: Obtener un equipo de red por id
+      tags:
+        - Equipos de red
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del equipo de red
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses: 
+        '200':
+          description: OK
+
+          
+    /network_equipment/{id}:
+    patch:
+      summary: Actualizar un equipo de red por id
+      tags:
+        - Equipos de red
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del equipo de red.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                brand:
+                  required: true
+                  type: string
+                model:
+                  required: true
+                  type: string
+                identifier: 
+                  required: true
+                  type: integer
+                interfaces: 
+                  required: true
+                  type: array
+                type:
+                  required: true
+                  type: enum('ROUTER', 'SWITCH', 'OLT', 'SERVER', 'ONU', 'ONT')
+                photo:
+                  required: true
+                  type: string
+                  format: binary
+      responses: 
+        '200':
+          description: OK
+
+
+      /network_equipment/{id}:
+    delete:
+      summary: Eliminar un equipo de red por id
+      tags:
+        - Equipos de red
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: id del usuario.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      
+      responses: 
+        '200':
+          description: OK
+
+          
+
+
+  /network_equipment/register:
+    post: 
+      summary: Registro un equipo de red
+      tags:
+        - Equipos de red
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                brand:
+                  required: true
+                  type: string
+                model:
+                  required: true
+                  type: string
+                identifier: 
+                  required: true
+                  type: integer
+                interfaces: 
+                  required: true
+                  type: array
+                type:
+                  required: true
+                  type: enum('ROUTER', 'SWITCH', 'OLT', 'SERVER', 'ONU', 'ONT')
+                photo:
+                  required: true
+                  type: string
+                  format: binary
+      responses: 
+        '201':
+          description: OK
+
+  /network_equipment/interface_relation/{id}:
+      delete:
+        summary: Eliminar una interfaz de red al equipo de red por el id de la relacion
+        tags:
+        - Equipos de red
+        parameters:
+        - name: id
+          in: path
+          required: true
+          description: id de la relacion.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      
+      responses: 
+        '200':
+          description: OK
